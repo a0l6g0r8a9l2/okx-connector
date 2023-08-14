@@ -31,6 +31,7 @@ def timeframe_to_seconds(timeframe: str) -> int:
     except Exception as ex:
         print(f'Got unexpected error: {ex}')
 
+
 def get_count_timeframes(start: datetime, end: datetime, timeframe: str = '15m') -> int:
     return int((datetime_as_int(end) - datetime_as_int(start)) / timeframe_to_seconds(timeframe))
 

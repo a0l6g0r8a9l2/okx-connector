@@ -22,13 +22,6 @@ def main():
     from_dt = (till_dt - delta)
 
     time_points = get_time_points(start=from_dt, end=till_dt, timeframe='15m', rate_limit=100)
-    """
-    Нужно сделать 3 запросов
-    [1691958486, 1691868486, 1691778486]
-    12 августа 2023 г., 22:30:00 GMT+03:00 - 13 августа 2023 г., 23:15:00 GMT+03:00
-    11 августа 2023 г., 21:30:00 GMT+03:00 - 12 августа 2023 г., 22:15:00 GMT+03:00
-    11 августа 2023 г., 21:15:00 GMT+03:00 - 10 августа 2023 г., 20:30:00 GMT+03:00
-    """
     data = collect_data(time_points, timeframe='15m', rate_limit=100)
     json_data = json.dumps(data)
     with open('output.json', 'w') as file:
@@ -62,7 +55,7 @@ def get_history_data(ticker: str, start_from: int, timeframe: str = '15m', limit
             )
         return history_candles
     except IndexError as err:
-        print(f'Ошибка {err}')
+        print(f'Got error: {err}. Could be an empty answer from API?')
     except Exception as ex:
         print(f'Got unexpected error {ex}')
 
