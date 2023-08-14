@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "okx-connector"
+version = "0.1.0"
+description = "software to interact with OKX"
+authors = ["algruwork <algruwork@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "okx_connector"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+autopep8 = "^2.0.2"
+flake8 = "^6.1.0"
+python-okx = "^0.2.0"
+pytz = "^2023.3"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.25.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
