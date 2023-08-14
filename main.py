@@ -5,11 +5,11 @@ import pytz
 
 import okx.MarketData as MarketData
 
-from utils.utils import get_time_points
+from utils.utils import get_time_points, timeframe_to_seconds
 
 timezone = pytz.timezone("Europe/Moscow")
 TICKER = 'ETH-USDC'
-PERIOD_IN_DAYS = 3
+PERIOD_IN_DAYS = 9
 FLAG = '0'  # live trading: 0, demo trading: 1
 SLEEP_PER_REQUEST_IN_SEC = 1
 marketDataAPI = MarketData.MarketAPI(flag=FLAG, debug=False)
@@ -37,7 +37,6 @@ def main():
 
 def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100) -> list[list]:
     data = []
-    print(f'Нужно сделать {len(time_points)} запросов')
     for p in range(len(time_points)):
         history_candles = get_history_data(
             ticker=TICKER,
@@ -49,8 +48,6 @@ def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100)
         if history_candles:
             for d in history_candles['data']:
                 data.append(d)
-    print(min([int(d[0]) for d in data]))  # протестировал, минимальное значене ~ -3 дня, а не как в colab - сутки.
-    # Т.е. со сбороб данных все ок, но тест нужно написать
     return data
 
 
@@ -59,11 +56,10 @@ def get_history_data(ticker: str, start_from: int, timeframe: str = '15m', limit
         history_candles = marketDataAPI.get_history_candlesticks(
             instId=ticker,
             bar=timeframe,
-            after=start_from*1000,  # in ms, source data format
+            after=(start_from - timeframe_to_seconds(timeframe))*1000,  # use ONLY AFTER, befor is broken
+            # Pagination of data to return records earlier than the requested
             limit=limit
             )
-        print(len(history_candles['data']))
-        print(f"From {history_candles['data'][0][0]} to {history_candles['data'][-1][0]}")
         return history_candles
     except IndexError as err:
         print(f'Ошибка {err}')
@@ -73,6 +69,3 @@ def get_history_data(ticker: str, start_from: int, timeframe: str = '15m', limit
 
 if __name__ == '__main__':
     main()
-
-# странная фигня - в колабе временной промежуток намного меньше
-# как вариант написать тест на получаемый json и проверять мин и макс дату-время

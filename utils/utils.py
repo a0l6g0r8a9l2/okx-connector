@@ -42,6 +42,6 @@ def get_count_timeframes(start: datetime, end: datetime, timeframe: str = '15m')
 def get_time_points(start: datetime, end: datetime, timeframe: str = '15m', rate_limit: int = 100) -> list[int]:
     timeframes = []
     for t in range(get_count_timeframes(start, end, timeframe)):
-        value = datetime_as_int(start) + t * timeframe_to_seconds(timeframe)
+        value = datetime_as_int(end) - t * timeframe_to_seconds(timeframe)
         timeframes.append(value)
     return [t for n, t in enumerate(timeframes) if n % rate_limit == 0]
