@@ -20,7 +20,7 @@ def main():
     till_dt = timezone.localize(today)
     delta = datetime.timedelta(days=PERIOD_IN_DAYS)
     from_dt = (till_dt - delta)
-    
+
     time_points = get_time_points(start=from_dt, end=till_dt, timeframe='15m', rate_limit=100)
     """
     Нужно сделать 3 запросов
@@ -33,9 +33,9 @@ def main():
     json_data = json.dumps(data)
     with open('output.json', 'w') as file:
         file.write(json_data)
-    
 
-def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100) -> list[list]:   
+
+def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100) -> list[list]:
     data = []
     print(f'Нужно сделать {len(time_points)} запросов')
     for p in range(len(time_points)):
@@ -49,7 +49,8 @@ def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100)
         if history_candles:
             for d in history_candles['data']:
                 data.append(d)
-    print(min([int(d[0]) for d in data])) # протестировал, минимальное значене ~ -3 дня, а не как в colab - сутки. Т.е. со сбороб данных все ок, но тест нужно написать
+    print(min([int(d[0]) for d in data]))  # протестировал, минимальное значене ~ -3 дня, а не как в colab - сутки.
+    # Т.е. со сбороб данных все ок, но тест нужно написать
     return data
 
 
