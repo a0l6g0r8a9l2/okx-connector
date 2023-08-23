@@ -9,10 +9,17 @@ from utils.utils import get_time_points, timeframe_to_seconds
 
 timezone = pytz.timezone("Europe/Moscow")
 TICKER = 'ETH-USDC'
-PERIOD_IN_DAYS = 9
+PERIOD_IN_DAYS = 5
 FLAG = '0'  # live trading: 0, demo trading: 1
 SLEEP_PER_REQUEST_IN_SEC = 1
 marketDataAPI = MarketData.MarketAPI(flag=FLAG, debug=False)
+
+# todo: save data to DB
+# todo: get data from DB
+# todo: convert script as FastApi app
+# todo: get diff between DB and request from OKX (with saveving to DB)
+# todo: add request get tickers
+# todo: если модальная цена измелась сильно - пора выходить из позиций
 
 
 def main():
@@ -24,7 +31,7 @@ def main():
     time_points = get_time_points(start=from_dt, end=till_dt, timeframe='15m', rate_limit=100)
     data = collect_data(time_points, timeframe='15m', rate_limit=100)
     json_data = json.dumps(data)
-    with open('output.json', 'w') as file:
+    with open(f'output_{PERIOD_IN_DAYS}.json', 'w') as file:
         file.write(json_data)
 
 
@@ -37,7 +44,8 @@ def collect_data(time_points: list[int], timeframe='15m', rate_limit: int = 100)
             timeframe=timeframe,
             limit=rate_limit
             )
-        time.sleep(1)
+        time.sleep(SLEEP_PER_REQUEST_IN_SEC)
+        print(f'Load batch #{p+1} from {len(time_points)}')
         if history_candles:
             for d in history_candles['data']:
                 data.append(d)
