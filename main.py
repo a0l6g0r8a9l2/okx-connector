@@ -14,6 +14,7 @@ FLAG = '0'  # live trading: 0, demo trading: 1
 SLEEP_PER_REQUEST_IN_SEC = 1
 marketDataAPI = MarketData.MarketAPI(flag=FLAG, debug=False)
 
+# todo: крайние 2+ дня отсутствую в выборке
 # todo: save data to DB
 # todo: get data from DB
 # todo: convert script as FastApi app
